@@ -1,25 +1,32 @@
 // src/components/ContentForm.js
 import React, { useState } from "react";
+import axios from "axios";
 import { Container, Grid, TextField, Button, Typography } from "@mui/material";
 
 const ContentForm = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
 
-  const handleGenerateImage = () => {
-    // Mock image generation logic
-    setImage(
-      `https://via.placeholder.com/400x300?text=${encodeURIComponent(content)}`
-    );
+  const handleGenerateImage = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/generate-image",
+        { text: content },
+        { responseType: "blob" }
+      );
+      const imageURL = URL.createObjectURL(response.data);
+      setImage(imageURL);
+    } catch (error) {
+      console.error("Error generating image:", error);
+    }
   };
 
   return (
     <Container>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <br />
           <Typography variant="h4" gutterBottom>
-            Workplace Finance B2B2E - Financial Literacy using GenAI
+            Financial Literacy - Workplace Finance App B2B2E
           </Typography>
         </Grid>
         <Grid item xs={12}>
